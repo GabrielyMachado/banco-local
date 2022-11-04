@@ -20,12 +20,19 @@ export async function adicionaNota(nota){
     
 }
 
-export async function buscaNotas(nota){
+export async function buscaNotas(filtro){
+    
     return new Promise ((resolve) => {
         db.transaction((transaction) => {
-            transaction.executeSql("SELECT * FROM Notas;", [], (transaction, resultado) => {
-                resolve(resultado.rows._array)
-            })
+            filtro == 'Todos' 
+            ?
+                transaction.executeSql("SELECT * FROM Notas;", [], (transaction, resultado) => {
+                    resolve(resultado.rows._array)
+                })
+            :
+                transaction.executeSql("SELECT * FROM Notas WHERE categoria = ?;", [filtro], (transaction, resultado) => {
+                    resolve(resultado.rows._array)
+                })
         })
     })
 }
